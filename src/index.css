@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Siemreap&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Khmer font */
+html[lang="km"],
+html[lang="km"] body,
+html[lang="km"] button,
+html[lang="km"] input,
+html[lang="km"] select,
+html[lang="km"] textarea {
+  font-family: "Siemreap", sans-serif;
+}
+html[lang="km"] h1,
+html[lang="km"] h2,
+html[lang="km"] h3,
+html[lang="km"] h4 {
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Improve the readability of Khmer paragraphs */
+html[lang="km"] p {
+  font-weight: 400;
+  line-height: 1.9;
+}
