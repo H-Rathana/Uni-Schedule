@@ -43,5 +43,19 @@
   "afternoon": "ពេលរសៀល",
   "night": "ពេលយប់",
   "classScheduler": "កាលវិភាគថ្នាក់រៀន",
-  "adminWorkspace": "ផ្ទាំងការងារអ្នកគ្រប់គ្រង"
+  "adminWorkspace": "ផ្ទាំងការងារអ្នកគ្រប់គ្រង",
+  "demoCheckComplete": "ការពិនិត្យសាកល្បងបានបញ្ចប់",
+  "conflictsDetected": "រកឃើញការប៉ះទង្គិចចំនួន {{count}} ក្នុងកាលវិភាគនេះ។",
+  "all": "ទាំងអស់",
+  "teacher": "គ្រូបង្រៀន",
+  "room": "បន្ទប់",
+  "class": "ថ្នាក់",
+  "teacherConflictDescription": "{{teacher}} ត្រូវបានកំណត់ឱ្យបង្រៀនពីរថ្នាក់ក្នុងពេលតែមួយ។",
+  "roomConflictDescription": "បន្ទប់ {{room}} ត្រូវបានប្រើប្រាស់ដោយពីរថ្នាក់ក្នុងពេលតែមួយ។",
+  "classConflictDescription": "និស្សិតក្នុងក្រុម {{section}} មានមុខវិជ្ជាពីរក្នុងពេលតែមួយ។",
+  "conflictNumber": "ការប៉ះទង្គិចលេខ {{id}}",
+  "closeDetails": "បិទព័ត៌មានលម្អិត",
+  "dayAndTime": "ថ្ងៃ និងម៉ោង",
+  "classesInvolved": "ថ្នាក់ដែលពាក់ព័ន្ធ",
+  "close": "បិទ"
 }

@@ -43,5 +43,19 @@
   "afternoon": "Afternoon",
   "night": "Night",
   "classScheduler": "Class Scheduler",
-  "adminWorkspace": "Admin Workspace"
+  "adminWorkspace": "Admin Workspace",
+  "demoCheckComplete": "Demo Check Complete",
+  "conflictsDetected": "{{count}} conflicts detected in this schedule.",
+  "all": "All",
+  "teacher": "Teacher",
+  "room": "Room",
+  "class": "Class",
+  "teacherConflictDescription": "{{teacher}} is assigned to two classes at the same time.",
+  "roomConflictDescription": "Room {{room}} is used by two classes at the same time.",
+  "classConflictDescription": "Students in section {{section}} have two classes at the same time.",
+  "conflictNumber": "Conflict #{{id}}",
+  "closeDetails": "Close details",
+  "dayAndTime": "Day and time",
+  "classesInvolved": "Classes involved",
+  "close": "Close"
 }

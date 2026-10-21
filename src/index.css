@@ -15,6 +15,7 @@ html[lang="km"] textarea {
 html[lang="km"] h1,
 html[lang="km"] h2,
 html[lang="km"] h3,
+html[lang="km"] span,
 html[lang="km"] h4 {
   font-weight: 400;
   letter-spacing: 0;

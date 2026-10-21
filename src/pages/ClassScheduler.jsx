@@ -1,73 +1,284 @@
-import { CalendarDays, Play } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import {
+  Play,
+  CalendarDays,
+  Calendar,
+  Printer,
+} from 'lucide-react'
+import ConflictPanel from '../components/timetable/ConflictPanel'
+
+const timeSlots = [
+  '07:00 - 08:30',
+  '08:30 - 10:00',
+  '10:00 - 11:30',
+  '11:30 - 13:00',
+  '13:00 - 14:30',
+  '14:30 - 16:00',
+  '16:00 - 17:30',
+]
+
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+
+const sampleSchedule = [
+  [
+    { code: 'CS101-A', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
+    { code: 'CS102-A', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
+    { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
+    { code: 'EE201-A', subject: 'Digital Electronics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
+    { code: 'CS101-B', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
+  ],
+  [
+    { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
+    { code: 'CS101-B', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
+    { code: 'CS102-A', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
+    { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'teal' },
+    { code: 'EE201-A', subject: 'Digital Electronics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
+  ],
+  [
+    { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
+    { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
+    { code: 'CS101-B', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
+    { code: 'CS102-A', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
+    { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'teal' },
+  ],
+  [null, null, null, null, null],
+  [
+    { code: 'CS102-B', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
+    { code: 'EE201-A', subject: 'Digital Electronics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
+    { code: 'CS101-B', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
+    { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
+    { code: 'CS102-B', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
+  ],
+  [
+    { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'teal' },
+    { code: 'CS102-B', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
+    { code: 'EE201-A', subject: 'Digital Electronics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
+    { code: 'CS101-A', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
+    { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
+  ],
+  [
+    null,
+    null,
+    { code: 'CS102-A', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
+    null,
+    { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'teal' },
+  ],
+]
+
+const colorClasses = {
+  blue: 'border-blue-200 bg-blue-100 dark:border-blue-900 dark:bg-blue-950',
+  purple: 'border-purple-200 bg-purple-100 dark:border-purple-900 dark:bg-purple-950',
+  green: 'border-green-200 bg-green-100 dark:border-green-900 dark:bg-green-950',
+  orange: 'border-orange-200 bg-orange-100 dark:border-orange-900 dark:bg-orange-950',
+  teal: 'border-teal-200 bg-teal-100 dark:border-teal-900 dark:bg-teal-950',
+}
+
+function ScheduleCard({ item }) {
+  if (!item) {
+    return (
+      <div className="flex min-h-20 items-center justify-center rounded-lg border border-transparent text-sm text-slate-300 dark:text-slate-600">
+        —
+      </div>
+    )
+  }
+
+  return (
+    <div
+      className={`min-h-20 rounded-lg border p-2 ${colorClasses[item.color]}`}
+    >
+      <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
+        {item.code}
+      </p>
+      <p className="mt-1 text-xs text-slate-700 dark:text-slate-300">
+        {item.subject}
+      </p>
+      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+        {item.room} | {item.teacher}
+      </p>
+    </div>
+  )
+}
 
 export default function ClassScheduler() {
   const { t } = useTranslation()
 
+  const [academicYear, setAcademicYear] = useState('2026-2027')
+  const [semester, setSemester] = useState('1')
+  const [generationMethod, setGenerationMethod] = useState('automatic')
+
+  const handleGenerate = () => {
+    alert('Schedule generation will be connected to the API later.')
+  }
+
+  const handlePrint = () => {
+    window.print()
+  }
+
   return (
-    <div className="space-y-6 p-4 sm:p-6">
-      <section>
-        <h2 className="text-2xl font-normal leading-relaxed text-slate-900 dark:text-white">
+    <main className="min-h-screen bg-slate-50 p-3 text-slate-900 dark:bg-slate-950 dark:text-slate-100 sm:p-5">
+      
+      Page heading
+      <header className="mb-5">
+        <h1 className="text-xl font-semibold">
           {t('generateSchedule')}
-        </h2>
+        </h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Set the academic term and generate a class schedule.
         </p>
-      </section>
+      </header>
 
-      <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2 xl:grid-cols-4 dark:border-slate-800 dark:bg-slate-900">
-        <label className="space-y-2">
-          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            {t('academicYear')}
-          </span>
-          <select className="w-full mt-5 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-800">
-            <option>2026–2027</option>
-            <option>2025–2026</option>
-          </select>
-        </label>
+      {/* Main two-column layout */}
+      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,2.1fr)_minmax(320px,0.9fr)]">
+        {/* LEFT COLUMN: Generate form + timetable */}
+        <div className="min-w-0 space-y-4">
+          {/* Generate Schedule form */}
+          <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-2 2xl:grid-cols-[1fr_1fr_1fr_auto]">
+              <label className="block min-w-0">
+                <span className="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-300">
+                  {t('academicYear')}
+                </span>
+                <select
+                  value={academicYear}
+                  onChange={(event) => setAcademicYear(event.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:focus:ring-blue-900"
+                >
+                  <option value="2026-2027">2026 - 2027</option>
+                  <option value="2025-2026">2025 - 2026</option>
+                </select>
+              </label>
 
-        <label className="space-y-2">
-          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            {t('semester')}
-          </span>
-          <select className="w-full mt-5 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-800">
-            <option>{t('semester')} 1</option>
-            <option>{t('semester')} 2</option>
-          </select>
-        </label>
+              <label className="block min-w-0">
+                <span className="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-300">
+                  {t('semester')}
+                </span>
+                <select
+                  value={semester}
+                  onChange={(event) => setSemester(event.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:focus:ring-blue-900"
+                >
+                  <option value="1">{t('semester')} 1</option>
+                  <option value="2">{t('semester')} 2</option>
+                </select>
+              </label>
 
-        <label className="space-y-2">
-          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            {t('generationMethod')}
-          </span>
-          <select className="w-full mt-5 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-800">
-            <option>{t('automatic')}</option>
-            <option>{t('manual')}</option>
-          </select>
-        </label>
+              <label className="block min-w-0">
+                <span className="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-300">
+                  {t('generationMethod')}
+                </span>
+                <select
+                  value={generationMethod}
+                  onChange={(event) => setGenerationMethod(event.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:focus:ring-blue-900"
+                >
+                  <option value="automatic">{t('automatic')}</option>
+                  <option value="manual">{t('manual')}</option>
+                </select>
+              </label>
 
-        <div className="flex items-end">
-          <button
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
-            onClick={() => alert('Schedule generation will be connected later.')}
-          >
-            <Play size={17} fill="currentColor" />
-            {t('generateSchedule')}
-          </button>
+              <button
+                type="button"
+                onClick={handleGenerate}
+                className="flex min-h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <Play size={16} fill="currentColor" />
+                <span>{t('generateSchedule')}</span>
+              </button>
+            </div>
+          </section>
+
+          {/* Weekly timetable */}
+          <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <CalendarDays size={20} className="text-blue-600" />
+                <h2 className="font-semibold">
+                  {t('generatedSchedule')}
+                </h2>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <select
+                  aria-label="Schedule view"
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800"
+                  defaultValue="weekly"
+                >
+                  <option value="weekly">Weekly View</option>
+                </select>
+
+                <button
+                  type="button"
+                  aria-label="Calendar view"
+                  className="rounded-lg border border-slate-200 p-2 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+                >
+                  <Calendar size={18} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+                >
+                  <Printer size={16} />
+                  Print
+                </button>
+              </div>
+            </div>
+
+            {/* Scroll horizontally on small screens */}
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[760px] table-fixed border-collapse text-left">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800">
+                    <th className="w-28 border border-slate-200 px-2 py-3 text-xs font-semibold dark:border-slate-700">
+                      Time
+                    </th>
+                    {days.map((day) => (
+                      <th
+                        key={day}
+                        className="border border-slate-200 px-2 py-3 text-center text-xs font-semibold dark:border-slate-700"
+                      >
+                        {day}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {timeSlots.map((time, rowIndex) => (
+                    <tr key={time}>
+                      <th className="border border-slate-200 bg-slate-50 px-2 py-3 text-center text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                        {time}
+                      </th>
+
+                      {days.map((day, dayIndex) => (
+                        <td
+                          key={`${day}-${time}`}
+                          className="border border-slate-200 p-1 align-top dark:border-slate-700"
+                        >
+                          <ScheduleCard
+                            item={sampleSchedule[rowIndex][dayIndex]}
+                          />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+              Sample timetable data — this will be replaced with API data later.
+            </p>
+          </section>
         </div>
-      </section>
 
-      <section className="flex min-h-64 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-900">
-        <div className="text-center">
-          <CalendarDays className="mx-auto text-slate-400" size={38} />
-          <h3 className="mt-3 font-semibold text-slate-800 dark:text-slate-200">
-            {t('generatedSchedule')}
-          </h3>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            The weekly timetable will appear here.
-          </p>
-        </div>
-      </section>
-    </div>
+        {/* RIGHT COLUMN: Conflict panel aligned with top form */}
+        <aside className="min-w-0">
+          <ConflictPanel />
+        </aside>
+      </div>
+    </main>
   )
 }
