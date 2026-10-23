@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -18,7 +19,14 @@ const timeSlots = [
   '16:00 - 17:30',
 ]
 
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+const days = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+]
 
 const sampleSchedule = [
   [
@@ -27,6 +35,7 @@ const sampleSchedule = [
     { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
     { code: 'EE201-A', subject: 'Digital Electronics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
     { code: 'CS101-B', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
+    { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'teal' },
   ],
   [
     { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
@@ -34,6 +43,7 @@ const sampleSchedule = [
     { code: 'CS102-A', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
     { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'teal' },
     { code: 'EE201-A', subject: 'Digital Electronics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
+    { code: 'CS102-B', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
   ],
   [
     { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
@@ -41,14 +51,16 @@ const sampleSchedule = [
     { code: 'CS101-B', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
     { code: 'CS102-A', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
     { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'teal' },
+    { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
   ],
-  [null, null, null, null, null],
+  [null, null, null, null, null, null],
   [
     { code: 'CS102-B', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
     { code: 'EE201-A', subject: 'Digital Electronics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
     { code: 'CS101-B', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
     { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
     { code: 'CS102-B', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
+    { code: 'EE201-A', subject: 'Digital Electronics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
   ],
   [
     { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'teal' },
@@ -56,6 +68,7 @@ const sampleSchedule = [
     { code: 'EE201-A', subject: 'Digital Electronics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'orange' },
     { code: 'CS101-A', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
     { code: 'MATH101-A', subject: 'Calculus', room: 'R102', teacher: 'Ms. Sopheak', color: 'green' },
+    null,
   ],
   [
     null,
@@ -63,6 +76,7 @@ const sampleSchedule = [
     { code: 'CS102-A', subject: 'Database', room: 'R103', teacher: 'Ms. Chan', color: 'purple' },
     null,
     { code: 'PHYS101-A', subject: 'Physics', room: 'LAB01', teacher: 'Mr. Vuth', color: 'teal' },
+    { code: 'CS101-A', subject: 'Programming', room: 'R101', teacher: 'Mr. Dara', color: 'blue' },
   ],
 ]
 
@@ -77,7 +91,7 @@ const colorClasses = {
 function ScheduleCard({ item }) {
   if (!item) {
     return (
-      <div className="flex min-h-20 items-center justify-center rounded-lg border border-transparent text-sm text-slate-300 dark:text-slate-600">
+      <div className="flex min-h-[76px] items-center justify-center rounded-lg text-sm text-slate-300 dark:text-slate-600">
         —
       </div>
     )
@@ -85,7 +99,9 @@ function ScheduleCard({ item }) {
 
   return (
     <div
-      className={`min-h-20 rounded-lg border p-2 ${colorClasses[item.color]}`}
+      className={`min-h-[76px] rounded-lg border p-2 ${
+        colorClasses[item.color] || colorClasses.blue
+      }`}
     >
       <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
         {item.code}
@@ -111,15 +127,10 @@ export default function ClassScheduler() {
     alert('Schedule generation will be connected to the API later.')
   }
 
-  const handlePrint = () => {
-    window.print()
-  }
-
   return (
-    <main className="min-h-screen bg-slate-50 p-3 text-slate-900 dark:bg-slate-950 dark:text-slate-100 sm:p-5">
-      
-      Page heading
-      <header className="mb-5">
+    <main className="flex h-[calc(100dvh-4rem)] flex-col overflow-hidden bg-slate-50 p-3 text-slate-900 dark:bg-slate-950 dark:text-slate-100 sm:p-5">
+      {/* Page heading */}
+      <header className="mb-4 shrink-0">
         <h1 className="text-xl font-semibold">
           {t('generateSchedule')}
         </h1>
@@ -128,12 +139,14 @@ export default function ClassScheduler() {
         </p>
       </header>
 
-      {/* Main two-column layout */}
-      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,2.1fr)_minmax(320px,0.9fr)]">
-        {/* LEFT COLUMN: Generate form + timetable */}
-        <div className="min-w-0 space-y-4">
-          {/* Generate Schedule form */}
-          <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      {/* Timetable and conflict panel */}
+      <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,2.1fr)_minmax(320px,0.9fr)]">
+
+        {/* Left side */}
+        <div className="flex min-h-0 min-w-0 flex-col gap-4">
+
+          {/* Generate Schedule */}
+          <section className="shrink-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-2 2xl:grid-cols-[1fr_1fr_1fr_auto]">
               <label className="block min-w-0">
                 <span className="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-300">
@@ -141,8 +154,8 @@ export default function ClassScheduler() {
                 </span>
                 <select
                   value={academicYear}
-                  onChange={(event) => setAcademicYear(event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:focus:ring-blue-900"
+                  onChange={(e) => setAcademicYear(e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-800"
                 >
                   <option value="2026-2027">2026 - 2027</option>
                   <option value="2025-2026">2025 - 2026</option>
@@ -155,8 +168,8 @@ export default function ClassScheduler() {
                 </span>
                 <select
                   value={semester}
-                  onChange={(event) => setSemester(event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:focus:ring-blue-900"
+                  onChange={(e) => setSemester(e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-800"
                 >
                   <option value="1">{t('semester')} 1</option>
                   <option value="2">{t('semester')} 2</option>
@@ -169,8 +182,8 @@ export default function ClassScheduler() {
                 </span>
                 <select
                   value={generationMethod}
-                  onChange={(event) => setGenerationMethod(event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:focus:ring-blue-900"
+                  onChange={(e) => setGenerationMethod(e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-800"
                 >
                   <option value="automatic">{t('automatic')}</option>
                   <option value="manual">{t('manual')}</option>
@@ -180,17 +193,17 @@ export default function ClassScheduler() {
               <button
                 type="button"
                 onClick={handleGenerate}
-                className="flex min-h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="flex min-h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
               >
                 <Play size={16} fill="currentColor" />
-                <span>{t('generateSchedule')}</span>
+                {t('generateSchedule')}
               </button>
             </div>
           </section>
 
           {/* Weekly timetable */}
-          <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <section className="flex min-h-0 min-w-0 flex-1 flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div className="mb-4 flex shrink-0 flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <CalendarDays size={20} className="text-blue-600" />
                 <h2 className="font-semibold">
@@ -201,8 +214,8 @@ export default function ClassScheduler() {
               <div className="flex items-center gap-2">
                 <select
                   aria-label="Schedule view"
-                  className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800"
                   defaultValue="weekly"
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800"
                 >
                   <option value="weekly">Weekly View</option>
                 </select>
@@ -210,15 +223,15 @@ export default function ClassScheduler() {
                 <button
                   type="button"
                   aria-label="Calendar view"
-                  className="rounded-lg border border-slate-200 p-2 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+                  className="rounded-lg border border-slate-200 p-2 dark:border-slate-700"
                 >
                   <Calendar size={18} />
                 </button>
 
                 <button
                   type="button"
-                  onClick={handlePrint}
-                  className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+                  onClick={() => window.print()}
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700"
                 >
                   <Printer size={16} />
                   Print
@@ -226,12 +239,12 @@ export default function ClassScheduler() {
               </div>
             </div>
 
-            {/* Scroll horizontally on small screens */}
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[760px] table-fixed border-collapse text-left">
-                <thead>
+            {/* Scroll the table, not the entire page */}
+            <div className="min-h-0 flex-1 hide-scrollbar h-full overflow-auto rounded-lg">
+              <table className="w-full min-w-[1000px] table-fixed border-collapse text-left">
+                <thead className="sticky top-0 z-10">
                   <tr className="bg-slate-50 dark:bg-slate-800">
-                    <th className="w-28 border border-slate-200 px-2 py-3 text-xs font-semibold dark:border-slate-700">
+                    <th className="w-28 border border-slate-200 px-2 py-3 text-xs dark:border-slate-700">
                       Time
                     </th>
                     {days.map((day) => (
@@ -251,7 +264,6 @@ export default function ClassScheduler() {
                       <th className="border border-slate-200 bg-slate-50 px-2 py-3 text-center text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
                         {time}
                       </th>
-
                       {days.map((day, dayIndex) => (
                         <td
                           key={`${day}-${time}`}
@@ -268,14 +280,14 @@ export default function ClassScheduler() {
               </table>
             </div>
 
-            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
-              Sample timetable data — this will be replaced with API data later.
+            <p className="mt-3 shrink-0 text-xs text-slate-500 dark:text-slate-400">
+              Sample timetable data — API integration will be added later.
             </p>
           </section>
         </div>
 
-        {/* RIGHT COLUMN: Conflict panel aligned with top form */}
-        <aside className="min-w-0">
+        {/* Right side: conflict panel */}
+        <aside className="min-h-0 min-w-0 overflow-y-auto overscroll-contain hide-scrollbar">
           <ConflictPanel />
         </aside>
       </div>

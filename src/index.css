@@ -26,3 +26,21 @@ html[lang="km"] p {
   font-weight: 400;
   line-height: 1.9;
 }
+
+/* Hide scrollbar but keep scrolling functional */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Keep the page itself fixed without scrolling */
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
